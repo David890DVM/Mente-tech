@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mente Tech</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .level {
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Mente Tech</h1>
+    <p>Programado y Desarrollado por David Villegas Mendieta, en San José, Costa Rica, profesional de la tecnología del información TI© Derechos Recervados 2024 PROHIBIR cualquier copia del codigo funete de este.</p>
+    <div id="game">
+        <div id="level-selection">
+            <h2>Selecciona un nivel</h2>
+            <button onclick="startGame('easy')">Fácil</button>
+            <button onclick="startGame('medium')">Medio</button>
+            <button onclick="startGame('hard')">Difícil</button>
+            <button onclick="startGame('god')">Dios</button>
+        </div>
+        <div id="question-container" class="hidden">
+            <div id="question" class="question"></div>
+            <div id="answers"></div>
+            <button onclick="nextQuestion()">Siguiente</button>
+        </div>
+        <div id="result" class="hidden">
+            <h2>¡Juego terminado!</h2>
+            <p id="result-message"></p>
+            <button onclick="resetGame()">Reiniciar</button>
+        </div>
+    </div>
+    <script>
+        const questions = {
+            easy: [
+                { question: "¿Qué es la adicción a la tecnología?", answers: ["Uso excesivo de dispositivos", "Ejercicio físico", "Lectura de libros"], correct: 0 },
+                { question: "¿Cómo se puede prevenir la adicción a la tecnología?", answers: ["Estableciendo límites de uso", "Usando más dispositivos", "Ignorando el problema"], correct: 0 },
+                { question: "¿Qué efecto tiene la adicción a la tecnología en el sueño?", answers: ["Interfiere con el sueño", "Mejora el sueño", "No tiene efecto"], correct: 0 },
+                { question: "¿Qué es un síntoma de la adicción a la tecnología?", answers: ["Aislamiento social", "Mejora en la salud", "Aumento de la productividad"], correct: 0 },
+                { question: "¿Qué porcentaje de adolescentes sufren de adicción a la tecnología?", answers: ["10%", "25%", "50%"], correct: 1 },
+                { question: "¿Qué es una consecuencia de la adicción a la tecnología?", answers: ["Problemas académicos", "Mejora en las relaciones sociales", "Aumento de la energía"], correct: 0 }
+            ],
+            medium: [
+                { question: "¿Qué es la adicción a los videojuegos?", answers: ["Uso excesivo de videojuegos", "Ejercicio físico", "Lectura de libros"], correct: 0 },
+                { question: "¿Cómo afecta la adicción a la tecnología a la salud mental?", answers: ["Aumenta la ansiedad", "Mejora la salud mental", "No tiene efecto"], correct: 0 },
+                { question: "¿Qué es un factor de riesgo para la adicción a la tecnología?", answers: ["Baja autoestima", "Alta autoestima", "Buena salud mental"], correct: 0 },
+                { question: "¿Qué es una estrategia para mitigar la adicción a la tecnología?", answers: ["Establecer horarios de uso", "Usar más dispositivos", "Ignorar el problema"], correct: 0 },
+                { question: "¿Qué es un síntoma de la adicción a los videojuegos?", answers: ["Obsesión por jugar", "Desinterés por los videojuegos", "Mejora en el rendimiento académico"], correct: 0 }
+            ],
+            hard: [
+                { question: "¿Qué porcentaje de adolescentes reportan problemas de sueño debido a la tecnología?", answers: ["20%", "50%", "70%"], correct: 2 },
+                { question: "¿Qué es una consecuencia a largo plazo de la adicción a la tecnología?", answers: ["Problemas de salud mental", "Mejora en la salud", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es una señal de adicción a la tecnología?", answers: ["Uso compulsivo de dispositivos", "Uso moderado de dispositivos", "Desinterés por la tecnología"], correct: 0 },
+                { question: "¿Qué es una estrategia efectiva para reducir el uso de tecnología?", answers: ["Establecer límites claros", "Usar más dispositivos", "Ignorar el problema"], correct: 0 },
+                { question: "¿Qué es un efecto negativo de la adicción a los videojuegos?", answers: ["Aislamiento social", "Mejora en las relaciones sociales", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es una consecuencia de la adicción a la tecnología en la escuela?", answers: ["Bajo rendimiento académico", "Mejora en el rendimiento académico", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es un síntoma de la adicción a la tecnología?", answers: ["Ansiedad", "Mejora en la salud mental", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es una estrategia para prevenir la adicción a la tecnología?", answers: ["Establecer horarios de uso", "Usar más dispositivos", "Ignorar el problema"], correct: 0 }
+            ],
+            god: [
+                { question: "¿Qué es una estrategia avanzada para mitigar la adicción a la tecnología?", answers: ["Terapia cognitivo-conductual", "Usar más dispositivos", "Ignorar el problema"], correct: 0 },
+                { question: "¿Qué es un efecto a largo plazo de la adicción a la tecnología?", answers: ["Problemas de salud mental", "Mejora en la salud", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es una señal de adicción a la tecnología en adolescentes?", answers: ["Uso compulsivo de dispositivos", "Uso moderado de dispositivos", "Desinterés por la tecnología"], correct: 0 },
+                { question: "¿Qué es una consecuencia de la adicción a la tecnología en la vida social?", answers: ["Aislamiento social", "Mejora en las relaciones sociales", "Aumento de la energía"], correct: 0 },
+                { question: "¿Qué es una estrategia para reducir el uso de tecnología en adolescentes?", answers: ["Establecer límites claros", "Usar más dispositivos", "Ignorar el problema"], correct: 0 }
+            ]
+        };
+
+        let currentLevel = '';
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startGame(level) {
+            currentLevel = level;
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('level-selection').classList.add('hidden');
+            document.getElementById('question-container').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionData = questions[currentLevel][currentQuestionIndex];
+            document.getElementById('question').innerText = questionData.question;
+            const answersContainer = document.getElementById('answers');
+            answersContainer.innerHTML = '';
+            questionData.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.innerText = answer;
+                button.onclick = () => checkAnswer(index);
+                answersContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const questionData = questions[currentLevel][currentQuestionIndex];
+            if (selectedIndex === questionData.correct) {
+                score++;
+            }
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions[currentLevel].length) {
+                showQuestion();
+            } else {
+                endGame();
+            }
+        }
+
+        function endGame() {
+            document.getElementById('question-container').classList.add('hidden');
+            document.getElementById('result').classList.remove('hidden');
+            document.getElementById('result-message').innerText = `Tu puntuación es ${score} de ${questions[currentLevel].length}`;
+        }
+
+        function resetGame() {
+            document.getElementById('result').classList.add('hidden');
+            document.getElementById('level-selection').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
+
